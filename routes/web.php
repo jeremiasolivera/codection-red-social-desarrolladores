@@ -1,12 +1,14 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SingleSignOnController;
+use App\Models\Post;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
-
+use Illuminate\Http\Request;
 
  
 
@@ -30,11 +32,48 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile', function(){
+        return view('pages.profile');
+    })->name('profile.change');
+    Route::post('/profile', function(Request $request){
+        
+        $request->validate([
+            'name' => 'string|max:100',
+            'avatar' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        $user = Auth::user();
+
+
+        if($request->hasFile('avatar')){
+            $path = $request->file('avatar')->store('avatars', 'public');
+
+            $user->avatar = $path;
+        }
+
+        $user->save();
+        return redirect('dashboard');
+
+    });
+
+    //Editar y eliminar perfil
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
 });
 
+
+// ****Rutas Posts****
+Route::middleware('auth')->group(function(){
+    // Route::resource('posts', PostController::class);
+    Route::get('/navegar', [PostController::class, 'index'])->name('navegar');
+    Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
+    Route::put('/post/edit', [PostController::class, 'edit'])->name('post.edit');
+    Route::delete('/post/{post}', [PostController::class, 'destroy'])->name('post.destroy');
+    Route::post('/posts/{post}/reaccion', [PostController::class, 'reaccion'])->name('posts.reaccion'); 
+    
+});
 
 
 require __DIR__.'/auth.php';

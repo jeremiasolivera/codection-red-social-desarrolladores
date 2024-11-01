@@ -37,6 +37,7 @@ class SingleSignOnController extends Controller
                 $user->update([
                     'provider_id' => $user_provider->id,
                     'name' => $user_provider->name,
+                    'avatar' => $user_provider->avatar,
                     'email_verified_at' => now(), 
                 ]);
             } else {
@@ -44,6 +45,7 @@ class SingleSignOnController extends Controller
                 $user = User::create([
                     'provider_id' => $user_provider->id,
                     'name' => $user_provider->name,
+                    'avatar' => $user_provider->avatar,
                     'email' => $user_provider->email,
                     'email_verified_at' => now(),
                 ]);

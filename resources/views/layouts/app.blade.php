@@ -10,6 +10,11 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        {{-- Poppins font --}}
+        
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+
+        
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -28,9 +33,13 @@
             @endif
 
             <!-- Page Content -->
-            <main>
+            <div class="bg-gradient-to-t from-[#071828] via-[#042b45] to-[#051625] min-h-screen w-full text-gray-100 font-sans">
                 @yield('content')
-            </main>
+            </div>
         </div>
+
+        @yield('script')
+        {{-- Font Awesome Icons --}}
+        <script src="https://kit.fontawesome.com/9fc06d4a5a.js" crossorigin="anonymous"></script>
     </body>
 </html>
