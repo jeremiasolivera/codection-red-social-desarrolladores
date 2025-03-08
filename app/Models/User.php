@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -24,7 +25,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'provider_id',
         'avatar',
-        'email_verified_at'
+        'email_verified_at',
+        'description',
+        'github_url', 
     ];
 
     /**
@@ -47,7 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password' => 'hashed',
     ];
 
-
+    # Módulo de Posts
     public function comments(): HasMany
     {
         return $this->hasMany(Post::class);
@@ -60,5 +63,22 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function reaccions(){
         $this->hasMany(Reaccion::class);
+    }
+
+    # Módulo de Seguidores
+    public function following(){
+        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follower_id');
+    }
+
+    public function followers(){
+        return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
+    }
+
+    public function isFollowing(User $user){
+        return $this->following()->where('follower_id', $user->id)->exists();
+    }
+
+    public function isFollower(User $user){
+        return $this->followers()->where('user_id', $user->id)->exists();
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SingleSignOnController;
@@ -32,8 +33,10 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', function(){
-        return view('pages.profile');
+    Route::get('/perfil', function(){
+        $posts = Post::where('user_id', Auth::id())->latest()->get(); // Filtra los posts del usuario autenticado
+     
+        return view('pages.perfiles.profile', compact('posts'));
     })->name('profile.change');
     Route::post('/profile', function(Request $request){
         
@@ -68,11 +71,17 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth')->group(function(){
     // Route::resource('posts', PostController::class);
     Route::get('/navegar', [PostController::class, 'index'])->name('navegar');
+    //Route::get('/post/edit', [PostController::class, 'edit'])->name('post.edit');
+    // Rutas de las publicaciones
     Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
-    Route::put('/post/edit', [PostController::class, 'edit'])->name('post.edit');
+    Route::put('/post/edit/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/post/{post}', [PostController::class, 'destroy'])->name('post.destroy');
     Route::post('/posts/{post}/reaccion', [PostController::class, 'reaccion'])->name('posts.reaccion'); 
-    
+    Route::post('/follow/{user}', [FollowController::class, 'follow'])->name('follow');
+    Route::post('/unfollow/{user}', [FollowController::class, 'unfollow'])->name('unfollow');
+    // Rutas de los perfiles
+    Route::put('/editar/perfil', [ProfileController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/perfil/{user}', [ProfileController::class, 'show'])->name('profile.show');
 });
 
 

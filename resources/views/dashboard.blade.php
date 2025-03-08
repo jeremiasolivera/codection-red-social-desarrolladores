@@ -74,6 +74,7 @@
     </x-dropdown-link>
 </form>
 
+<a href="{{route('navegar')}}">Navegar</a>
 
 
 {{-- TODO: Arreglar la creación de la publicación --}}

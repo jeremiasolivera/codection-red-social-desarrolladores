@@ -2,40 +2,120 @@
 
 
 @section('content')
-<main class="container mx-auto px-4 py-8 flex justify-evenly">
+
+<main class="mx-auto px-4 py-8 flex justify-evenly max-md:justify-between ">
+
+   
+{{-- Navbar mobile --}}
+    <nav class="fixed  sm:hidden w-full z-20 top-0 start-0 shadow-black shadow-md bg-[#05324f] px-5 py-5">
+      <ul class="text-[#b3e534] flex justify-between items-center w-full">
+        <li class="hover:-translate-y-0.5 transition-all duration-300 "><a href="" class="text-sm flex items-center gap-2"><i class="fa-solid fa-rocket"></i>Navegar</a></li>
+        <li class="hover:-translate-y-0.5 transition-all duration-300 "><a href="" class="text-sm flex items-center gap-2">   <i class="fa-solid fa-users-line"></i>Grupos</a></li>
+          <li class="hover:-translate-y-0.5 transition-all duration-300 "><a href="{{route('profile.change')}}" class="text-sm flex items-center gap-2"><i class="fa-solid fa-address-card"></i>Perfil</a></li>
+      </ul>
+    </nav>
+
+
     
     {{-- Aside - Perfil --}}
-    <aside class="w-64 pr-8 sticky">
+    <aside class="w-64 pr-8 max-md:w-56 max-sm:hidden">
       <div class="bg-[#05324f] rounded-lg p-5 mb-6 space-y-2">
-        <img class="w-16 h-16 rounded-full" src="{{filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : Storage::url(Auth::user()->avatar)}}" alt="user photo">
-        <h2 class="text-lg font-semibold mb-1 text-white">{{(Auth::user()->name)}}</h2>
-        <p class="text-sm text-gray-300">Full-stack developer passionate about React and Node.js</p>
+        <a href="{{route('profile.change')}}">
+          <img class="w-16 h-16 rounded-full" src="{{filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : Storage::url(Auth::user()->avatar)}}" alt="user photo">
+        </a>
+        <h2 class="text-lg max-md:text-md font-semibold mb-1 text-white">{{(Auth::user()->name)}}</h2>
+        <p class="text-sm text-gray-300 max-md:text-xs">{{ Str::limit(Auth::user()->description, 80, '...') }}</p>
+        <form id="logout-form" action="{{ route('logout') }}" method="POST">
+          @csrf
+          <button class="px-2 py-1 text-md text-white bg-[#be2f2f] rounded-sm">
+            
+              Cerrar Sesión
+            
+            </button>
+      </form>
       </div>
       <nav class="space-y-5">
-        <button  class="w-full flex items-center  gap-5 cursor-pointer hover:text-[#b3e534] hover:translate-x-1 transition-all duration-300">
+        <button  class="w-full flex items-center  gap-5 cursor-pointer text-[#b3e534] translate-x-1 transition-all duration-300">
           <i class="fa-solid fa-rocket"></i>
               
-            <span class="font-bold ">Navegar</span>
+            <span class="font-bold max-md:text-md">Navegar</span>
           
         </button>
         <button  class="w-full flex items-center  gap-5 cursor-pointer hover:text-[#b3e534] hover:translate-x-1 transition-all duration-300">
           <i class="fa-solid fa-users-line"></i>
               
-              <span class="font-bold ">Grupos</span>
+              <span class="font-bold max-md:text-md">Grupos</span>
         </button>
         <button  class="w-full flex items-center  gap-5 cursor-pointer hover:text-[#b3e534] hover:translate-x-1 transition-all duration-300">
+          <a href="{{route('profile.change')}}">
+
             <i class="fa-solid fa-address-card"></i>
-              
-              <span class="font-bold ">Perfil</span>
+            
+            <span class="font-bold max-md:text-md">Perfil</span>
+          </a>
         </button>
        
       </nav>
+
+
+      <aside class="w-full mt-8 block lg:hidden" >
+        <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
+          <h2 class="text-lg max-md:text-md font-semibold mb-4">Proyectos Tendencia</h2>
+          <ul class="space-y-2">
+            
+              <li key={index} class="text-sm max-md:text-xs">
+                <a href="#" class="text-cyan-400 hover:underline">React</a>
+              </li>
+  
+              <li key={index} class="text-sm max-md:text-xs">
+                <a href="#" class="text-cyan-400 hover:underline">Django</a>
+              </li>
+  
+              <li key={index} class="text-sm max-md:text-xs">
+                <a href="#" class="text-cyan-400 hover:underline">Laravel</a>
+              </li>
+            
+          </ul>
+        </div>
+        <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
+          <h2 class="text-lg font-semibold mb-4 max-md:text-md">Personas para Seguir</h2>
+          <ul class="space-y-4">
+  
+            @foreach ($users as $user)
+              <li class="flex items-center gap-2">
+                
+                <img class="w-8 h-8 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="user photo">
+                <div class="flex-1">
+                  <p class="text-sm font-medium max-md:text-xs ">{{$user->name}}</p>
+                  <p class="text-xs text-gray-400">Desarrollador</p>
+                </div>
+                <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
+                  Seguir
+                </button>
+              </li>
+            @endforeach
+            
+              
+            
+          </ul>
+        </div>
+        <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4">
+          <h2 class="text-lg max-md:text-md font-semibold mb-4">Actividad Reciente</h2>
+          <ul class="space-y-2 text-sm max-md:text-xs">
+            <li>Usuario1 comentó en tu publicación</li>
+            <li>Usuario2 le gustó tu proyecto</li>
+            <li>Usuario3 compartió tu artículo</li>
+          </ul>
+        </div>
+      </aside>
     </aside>
 
     {{-- Main content - Input --}}
 
+    
+
   
-    <section class="flex-1 max-w-2xl">
+    <section class="flex-1 max-w-2xl mt-16  sm:mt-0">
       <div class="bg-[#05324f] rounded-lg p-4 mb-6">
         <form method="POST" action="{{route('post.store')}}" enctype="multipart/form-data">
           @csrf
@@ -47,7 +127,7 @@
         ></textarea>
 
         <div class="flex justify-between items-end">
-          <select name="categoria_id" class="text-sm outline-none w-40 px-2 rounded-sm border-none bg-[#c6ff3a] text-[#1f1d1d] h-8"  >
+          <select name="categoria_id" class="text-sm max-md:text-xs max-md:h-7 max-md:py-1 outline-none w-40 px-2 rounded-sm border-none bg-[#c6ff3a] text-[#1f1d1d] h-8"  >
             @foreach ($categorias as $categoria)
                 <option value="{{$categoria->id}}">{{$categoria->nombre}}</option>
             @endforeach
@@ -63,13 +143,23 @@
           </button>
             
           
-          <input class="cursor-pointer bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm text-[#1f1d1d]" variant="outline" size="sm" type="submit" value="Publicar"/>
+          <input class="max-md:text-xs cursor-pointer bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm text-[#1f1d1d]" variant="outline" size="sm" type="submit" value="Publicar"/>
             
         </div>
         </div>
         </form>
       </div>
+
       
+      @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div class="alert-validator p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+              <span class="font-medium">Algo salió mal!</span> <b>{{$error}}</b>
+            </div>
+        @endforeach
+      @endif
+      
+
       {{-- Posts --}}
       @foreach ($posts as $post)
       <div  class="bg-[#05324f] rounded-lg p-5 mb-6">
@@ -77,25 +167,27 @@
             <div class="flex items-start gap-3">
             <img class="w-10 h-10 rounded-full" src="{{ filter_var($post->user->avatar, FILTER_VALIDATE_URL) ? $post->user->avatar : Storage::url($post->user->avatar) }}" alt="user photo">
                 <div>
-                    <h3 class="font-semibold">{{$post->user->name}}</h3>
-                    <p class="text-sm text-gray-400">{{$post->created_at->diffForHumans()}}</p>
+                    <a href="{{route('profile.show', ['user' => $post->user->id])}}" class="cursor-pointer hover:underline">
+                    <h3 class="font-semibold max-md:text-md">{{$post->user->name}}</h3>
+                    </a>
+                    <p class="text-sm text-gray-400 max-md:text-xs">{{$post->created_at->diffForHumans()}}</p>
                 </div>
               </div>
               @can('update', $post)
               <div>
-                    <a href="{{route('post.edit')}}" class="w-6 h-6" variant="outline" size="sm">
+                    <button class="w-6 h-6" variant="outline" size="sm" type="button" onclick="popupEdit()">
                       <i class="fa-solid fa-pen text-sm hover:text-blue-400 transition-all duration-200"></i>
-                    </a>
+                    </button>
                     
-                        <button class="w-6 h-6" variant="outline" onclick="popupDelete()" size="sm">
-                          <i class="fa-solid fa-trash text-sm hover:text-red-400 transition-all duration-200"></i>
-                        </button>
+                    <button class="w-6 h-6" variant="outline" onclick="popupDelete()" size="sm">
+                      <i class="fa-solid fa-trash text-sm hover:text-red-400 transition-all duration-200"></i>
+                    </button>
                     
                   </div>
                 @endcan
                 
             </div>
-            <p class="mb-4 text-white">{{$post->content}}</p>
+            <p class="mb-4 text-white max-md:text-md">{{$post->content}}</p>
             
             @if (count($post->media) === 1)
               <section class="w-full h-[350px] mb-4 rounded-md overflow-hidden">
@@ -132,7 +224,7 @@
 
             <div class="hidden z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true" id="popupdelete">
               
-              <div class="fixed inset-0 bg-slate-700 bg-opacity-80 transition-opacity" aria-hidden="true"></div>
+              <div class="fixed inset-0 bg-slate-700 bg-opacity-95 transition-opacity" aria-hidden="true"></div>
             
               <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
                 <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -146,7 +238,7 @@
                           </svg>
                         </div>
                         <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                          <h3 class="text-base font-semibold text-red-400" id="modal-title">¿Seguro que quieres eliminar este Post?</h3>
+                          <h3 class="text-sm font-semibold text-red-400" id="modal-title">¿Seguro que quieres eliminar este Post?</h3>
                           <div class="mt-2">
                             <p class="text-sm text-white">Los usuarios ya no podrán verlo y quedará eliminado de forma permanente de tu historial de posteos.</p>
                           </div>
@@ -163,6 +255,89 @@
                             </form>
                           
                       <button type="button" onclick="popupDelete()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancelar</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {{-- EndPopUP --}}
+           
+
+
+             {{-- Pop Up Edit --}}
+
+             <div class="hidden z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true" id="popupEdit-el">
+              
+              <div class="fixed inset-0 bg-slate-700 bg-opacity-95 transition-opacity" aria-hidden="true"></div>
+            
+              <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
+                <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center ">
+                  
+                  <div class="relative transform overflow-hidden rounded-lg bg-[#05324f] text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                    <div class="bg-[#05324f] px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                      <div class="">
+                        
+                        <div class="mt-3 text-center  sm:mt-0 sm:text-left">
+                          <h3 class="text-sm font-semibold text-red-400" id="modal-title">Edición de publicación</h3>
+                          
+                          <div class="bg-[#05324f] rounded-lg w-full mt-5">
+                            <form method="POST" action="{{route('post.update', $post)}}" enctype="multipart/form-data">
+                              @csrf
+                              @method('PUT')
+                              <textarea
+                              rows="4"
+                              name="content"
+                              placeholder="¿Qué estás pensando?"
+                              class="w-full bg-[#05324f] resize-none outline-none placeholder:text-gray-400 border-[#1e5072] text-gray-100 text-sm"
+                            >{{$post->content}}</textarea>
+
+                            <div class="flex gap-2 justify-start">
+                            @foreach($post->media as $image)
+                              <div class="w-20 h-20 rounded-sm overflow-hidden ">
+                                <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover" alt="Media de la publicación">
+                              </div>
+                              @endforeach
+                            </div>
+
+                            <div class="flex justify-between items-end">
+                              <select name="categoria_id" class="text-sm max-md:text-xs max-md:h-7 max-md:py-1 outline-none w-40 px-2 rounded-sm border-none bg-[#c6ff3a] text-[#1f1d1d] h-8"  >
+                                @foreach ($categorias as $categoria)
+                                    <option value="{{$categoria->id}}" selected='{{$post->categoria}}'>{{$categoria->nombre}}</option>
+                                @endforeach
+                              </select>
+                            
+                              
+                            
+                            <div class="flex  mt-4 gap-3">
+                              
+                              
+                              <input id="fileInput-up" multiple name="media[]" type="file" class="hidden" />
+                              {{-- <p id="warning-count-img"></p> --}}
+                    
+                              <button type="button"  onclick="document.getElementById('fileInput-up').click()" class="cursor-pointer text-[#2e2e2e] bg-[#c6ff3a] hover:bg-[#b3e534]rounded-sm py-1 px-3 text-md rounded">
+                                <i class="fa-solid fa-plus"></i>
+                              </button>
+                                
+                              
+                              
+                                
+                                <button type="submit" onclick="submitEditForm()" class="inline-flex w-full justify-center rounded-md bg-[#c6ff3a] px-3 py-2 text-sm font-semibold text-[#1f1d1d] shadow-sm sm:ml-3 sm:w-auto">Editar</button>
+                                <button type="button" onclick="popupEdit()" class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:mt-0 sm:w-auto">Cancelar</button>
+                            
+                            </div>
+                            </div>
+                            </form>
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="bg-[#05324f] px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                      
+                            
+                          
+                     
                     </div>
                   </div>
                 </div>
@@ -202,39 +377,53 @@
     </section>
         
     {{-- Right Bar  --}}
-    <aside class="w-72 pl-8" >
+    <aside class="w-72 pl-8 max-md:hidden" >
       <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
-        <h2 class="text-lg font-semibold mb-4">Proyectos Tendencia</h2>
+        <h2 class="text-lg max-md:text-md font-semibold mb-4">Proyectos Tendencia</h2>
         <ul class="space-y-2">
           
-            <li key={index} class="text-sm">
+            <li key={index} class="text-sm max-md:text-xs">
               <a href="#" class="text-cyan-400 hover:underline">React</a>
             </li>
 
-            <li key={index} class="text-sm">
+            <li key={index} class="text-sm max-md:text-xs">
               <a href="#" class="text-cyan-400 hover:underline">Django</a>
             </li>
 
-            <li key={index} class="text-sm">
+            <li key={index} class="text-sm max-md:text-xs">
               <a href="#" class="text-cyan-400 hover:underline">Laravel</a>
             </li>
           
         </ul>
       </div>
       <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
-        <h2 class="text-lg font-semibold mb-4">Personas para Seguir</h2>
+        <h2 class="text-lg font-semibold mb-4 max-md:text-md">Personas para Seguir</h2>
         <ul class="space-y-4">
 
-          @foreach ($users as $user)
+          {{-- TODO: Agregar texto cuando no haya personas registradas --}}
+          @foreach ($users->where('id', '!=', auth()->id())->take(5) as $user)
             <li class="flex items-center gap-2">
               <img class="w-8 h-8 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="user photo">
               <div class="flex-1">
-                <p class="text-sm font-medium">{{$user->name}}</p>
+                <p class="text-sm font-medium max-md:text-xs">{{$user->name}}</p>
                 <p class="text-xs text-gray-400">Desarrollador</p>
               </div>
-              <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm text-[#1f1d1d]">
-                Seguir
-              </button>
+              @if (auth()->user()->isFollowing($user))
+                  <form action="{{ route('unfollow', $user->id) }}" method="POST">
+                      @csrf
+                      <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
+                        Dejar de Seguir
+                      </button>
+                  </form>
+              @else
+                  <form action="{{ route('follow', $user->id) }}" method="POST">
+                      @csrf
+                      <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
+                        Seguir
+                      </button>
+                  </form>
+              @endif
+             
             </li>
           @endforeach
           
@@ -243,8 +432,8 @@
         </ul>
       </div>
       <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4">
-        <h2 class="text-lg font-semibold mb-4">Actividad Reciente</h2>
-        <ul class="space-y-2 text-sm">
+        <h2 class="text-lg max-md:text-md font-semibold mb-4">Actividad Reciente</h2>
+        <ul class="space-y-2 text-sm max-md:text-xs">
           <li>Usuario1 comentó en tu publicación</li>
           <li>Usuario2 le gustó tu proyecto</li>
           <li>Usuario3 compartió tu artículo</li>
@@ -259,9 +448,69 @@
 @endsection
 
 @section('script')
+{{-- 
+<script>
+  
+  const popupEditEl = document.getElementById('popupEdit-el');
+  alert("hola")
+
+  function popupEdit() {
+    alert("Hola")
+    popupEditEl.classList.toggle('hidden');
+  }
+
+  function submitEditForm() {
+    // Obtiene el contenido del formulario
+    const content = document.querySelector('textarea[name="content"]').value;
+    const categoriaId = document.querySelector('select[name="categoria_id"]').value;
+    const fileInput = document.querySelector('input[name="media[]"]');
+
+    // Crea el formulario y el objeto FormData para el envío
+    let formData = new FormData();
+    formData.append('content', content);
+    formData.append('categoria_id', categoriaId);
+
+    // Añade los archivos seleccionados
+    for (let i = 0; i < fileInput.files.length; i++) {
+        formData.append('media[]', fileInput.files[i]);
+    }
+
+    // Realiza la petición AJAX
+    fetch(`{{ route('post.update', $post->id) }}`, {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            'X-Requested-With': 'XMLHttpRequest' // Indica que es una petición AJAX
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Actualiza el contenido del post en la interfaz
+            document.querySelector(`#post-content-${$post->id}`).innerText = content;
+            document.querySelector(`#post-category-${$post->id}`).innerText = data.category_name;
+
+            // Cierra el modal
+        } else {
+            console.log('Error al actualizar la publicación:', data.error);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+</script> --}}
+
 <script>
 
   const popUpDelete = document.getElementById('popupdelete');
+  const popUpEditEl = document.getElementById('popupEdit-el');
+
+
+
+  function popupEdit(){
+    popUpEditEl.classList.toggle("hidden")
+  }
 
   function popupDelete(){
     popUpDelete.classList.toggle("hidden")
@@ -296,4 +545,19 @@ fetch(`/posts/${postId}/reaccion`, {
 }
 
 </script>
+
+<script>
+alertValidator = document.querySelectorAll("div.alert-validator")
+
+if(alertValidator){
+  alertValidator.forEach(el => {
+    setTimeout(() => {
+        el.style.display = 'none'
+      }, 5000);
+  });
+}
+
+
+
+</script> 
 @endsection

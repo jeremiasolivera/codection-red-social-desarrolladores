@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use LengthException;
 
 class PostController extends Controller
 {
@@ -34,7 +35,7 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-
+        
         $request->validate([
             'content' => 'required|string|max:255',
             'media' => 'array|max:3',
@@ -51,7 +52,7 @@ class PostController extends Controller
         ]);
         
 
-        if ($request->has('media')) {
+        if ($request->has('media') && $request->has('media') <= 3) {
             foreach ($request->file('media') as $file) {
                 $path = $file->store('media', 'public'); 
                 $type = $file->getMimeType();
@@ -61,6 +62,9 @@ class PostController extends Controller
                     'path' => $path,
                 ]);
             }
+        }else{
+            return redirect()->route('navegar');
+            
         }
 
         return redirect()->route('navegar');
@@ -92,49 +96,67 @@ class PostController extends Controller
     {
         $this->authorize('update', $post);
 
+        $cantidadActual = $post->media()->count(); // Cuenta cuántas imágenes ya subió
+        $disponibles = 3 - $cantidadActual; // Espacios restantes
+        
         $request->validate([
-            'content' => 'required|string|max:255',
-            'media' => 'array|max:3',
-            'media.*' => 'file|mimes:jpeg,jpg,png,webp,mp4|max:10240'
-
+            'content' => 'required|string',
+            'media' => 'array|max:' . $disponibles,
+            'media.*' => 'image|max:2048', // Validación de imágenes
+            'categoria_id' => 'required|exists:categorias,id'
         ]);
 
-        
+        if ($disponibles <= 0) {
+            return redirect()->back()->with('error', 'Ya alcanzaste el límite de imágenes permitidas.');
+        }
 
+        // Actualiza el contenido de la publicación
         $post->content = $request->content;
-        $post->editado = 1;
+        $post->categoria_id = $request->categoria_id;
 
-        if ($request->has('media')) {
-            foreach ($post->media as $media) {
-                Storage::delete($media->path); // Usa el nombre correcto del campo donde guardas la ruta del archivo
+        // Procesa las imágenes si hay nuevas
+        if ($request->hasFile('media')) {
+            
+            // Elimina las imágenes antiguas
+            // foreach ($post->media as $filePath) {
+            //     $filePath->delete();
+            //     Storage::delete($filePath);
+            // }
 
-                // Elimina el registro de la tabla media
-                $media->delete();
-            }
+            // Guarda las nuevas imágenes y almacena las rutas
+            $mediaPaths = [];
 
             foreach ($request->file('media') as $file) {
                 $path = $file->store('media', 'public'); 
                 $type = $file->getMimeType();
-    
+                $mediaPaths[] = $path;
+
+                
                 $post->media()->create([
                     'type' => $type,
                     'path' => $path,
-                    
                 ]);
+                #$post->media = $mediaPaths;
+                #$post->type = $type;
             }
+
+            
         }
+        ##dd($post);
 
         $post->save();
 
         return redirect()->route('navegar')->with('success', 'Publicación actualizada exitosamente');
-
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($id)
     {
+    
+
         $post = Post::findOrFail($id);
 
         if(auth()->id() !== $post->user_id){
@@ -170,4 +192,7 @@ class PostController extends Controller
     ]);
 }
 
+
 }
+
+
