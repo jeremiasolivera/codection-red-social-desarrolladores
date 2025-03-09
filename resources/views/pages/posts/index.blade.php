@@ -99,14 +99,7 @@
             
           </ul>
         </div>
-        <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4">
-          <h2 class="text-lg max-md:text-md font-semibold mb-4">Actividad Reciente</h2>
-          <ul class="space-y-2 text-sm max-md:text-xs">
-            <li>Usuario1 comentó en tu publicación</li>
-            <li>Usuario2 le gustó tu proyecto</li>
-            <li>Usuario3 compartió tu artículo</li>
-          </ul>
-        </div>
+        
       </aside>
     </aside>
 
@@ -481,58 +474,7 @@
 @endsection
 
 @section('script')
-{{-- 
-<script>
-  
-  const popupEditEl = document.getElementById('popupEdit-el');
-  alert("hola")
 
-  function popupEdit() {
-    alert("Hola")
-    popupEditEl.classList.toggle('hidden');
-  }
-
-  function submitEditForm() {
-    // Obtiene el contenido del formulario
-    const content = document.querySelector('textarea[name="content"]').value;
-    const categoriaId = document.querySelector('select[name="categoria_id"]').value;
-    const fileInput = document.querySelector('input[name="media[]"]');
-
-    // Crea el formulario y el objeto FormData para el envío
-    let formData = new FormData();
-    formData.append('content', content);
-    formData.append('categoria_id', categoriaId);
-
-    // Añade los archivos seleccionados
-    for (let i = 0; i < fileInput.files.length; i++) {
-        formData.append('media[]', fileInput.files[i]);
-    }
-
-    // Realiza la petición AJAX
-    fetch(`{{ route('post.update', $post->id) }}`, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'X-Requested-With': 'XMLHttpRequest' // Indica que es una petición AJAX
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            // Actualiza el contenido del post en la interfaz
-            document.querySelector(`#post-content-${$post->id}`).innerText = content;
-            document.querySelector(`#post-category-${$post->id}`).innerText = data.category_name;
-
-            // Cierra el modal
-        } else {
-            console.log('Error al actualizar la publicación:', data.error);
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-</script> --}}
 
 <script>
 
