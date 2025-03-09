@@ -26,12 +26,20 @@
     {{-- Descripción usuario --}}
     <div class="flex flex-col gap-2">
         <h2 class="text-2xl m-0 max-md:text-lg font-semibold mb-1 text-white">{{$user->name}}</h2>
-        <a href="{{$user->github_url}}" target="_blank">
+        @if (!empty($user->github_url))
+    <a href="{{ $user->github_url }}" target="_blank">
         <button class="h-6 w-min p-2 flex items-center gap-2 text-white bg-[#37393d] rounded-sm">
             GitHub
             <i class="fa-brands fa-github"></i>
-          </button>
-        </a>
+        </button>
+    </a>
+@else
+    <button class="h-6 w-min p-2 flex items-center gap-2 text-white bg-gray-500 rounded-sm cursor-not-allowed opacity-50" disabled>
+        GitHub
+        <i class="fa-brands fa-github"></i>
+    </button>
+@endif
+
     </div>
   </div>
   {{-- Seguidores usuario --}}
@@ -172,6 +180,7 @@
     @endif
     
     </div>
+    {{-- TODO: ARREGLAR BOTONES DE LIKE Y REPOSTS DE ESTA SESIÓN --}}
     <div id="sus-reposts-container">
         <h1 class="font-bold text-2xl pb-4">Sus reposts</h1>
       @if ($reposts->count() > 0)
@@ -246,29 +255,27 @@
       </section>
   @endif
               <div class="flex space-x-4 items-center justify-between">
+                @if ($post->user_id == Auth::id())
                 <div class="flex items-center gap-3">
-                  <button onclick="toggleLike({{ $post->id }})" class="flex items-center gap-2" id="like-btn-{{ $post->id }}">
-                    <span id="like-count-{{ $post->id }}">{{ $post->reaccions->count() }}</span>
-                    @if ($post->reaccions->where('user_id', Auth::id())->count())
-                        <i id="like-icon-{{ $post->id }}" class="fa-solid fa-heart text-[#b3e534]"></i> 
-                    @else
-                        <i id="like-icon-{{ $post->id }}" class="fa-regular fa-heart"></i>
-                    @endif
-                  </button>
-      
-                  <button onclick="toggleRepost({{ $post->id }})" class="flex items-center gap-2" id="repost-btn-{{ $post->id }}">
-                    <span id="repost-count-{{ $post->id }}">{{ $post->reposts->count() }}</span>
-                    @if ($post->reposts->where('user_id', Auth::id())->count())
-                        <i id="repost-icon-{{ $post->id }}" class="fa-solid fa-arrows-rotate text-[#b3e534]"></i> 
-                    @else
-                        <i id="repost-icon-{{ $post->id }}" class="fa-solid fa-arrows-rotate"></i>
-                    @endif
-                </button>
-      
-                    @if ($post->editado === 1)
-                        <span class="text-sm text-gray-400">Editado</span>
-                    @endif
+                    <button onclick="toggleLike({{ $post->id }})" class="flex items-center gap-2" id="like-btn-{{ $post->id }}">
+                        <span id="like-count-{{ $post->id }}">{{ $post->reaccions->count() }}</span>
+                        @if ($post->reaccions->where('user_id', Auth::id())->count())
+                            <i id="like-icon-{{ $post->id }}" class="fa-solid fa-heart text-[#b3e534]"></i> 
+                        @else
+                            <i id="like-icon-{{ $post->id }}" class="fa-regular fa-heart"></i>
+                        @endif
+                    </button>
+            
+                    <button onclick="toggleRepost({{ $post->id }})" class="flex items-center gap-2" id="repost-btn-{{ $post->id }}">
+                        <span id="repost-count-{{ $post->id }}">{{ $post->reposts->count() }}</span>
+                        @if ($post->reposts->where('user_id', Auth::id())->count())
+                            <i id="repost-icon-{{ $post->id }}" class="fa-solid fa-arrows-rotate text-[#b3e534]"></i> 
+                        @else
+                            <i id="repost-icon-{{ $post->id }}" class="fa-solid fa-arrows-rotate"></i>
+                        @endif
+                    </button>
                 </div>
+            @endif
                  <div>
                   <span class="bg-[#c7ff3a38] text-slate-200 text-xs font-medium me-2 px-2 py-0.5 rounded dark:bg-gray-700 dark:text-green-400 border border-[#c6ff3a]">{{$post->categoria->nombre}}</span>
                  </div>
@@ -317,6 +324,7 @@ fetch(`/posts/${postId}/reaccion`, {
 }
 // Repost función
 function toggleRepost(postId) {
+    //console.log(postId)
     fetch(`/posts/${postId}/repost`, {
         method: 'POST',
         headers: {

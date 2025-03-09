@@ -419,19 +419,19 @@
     {{-- Right Bar  --}}
     <aside class="w-72 pl-8 max-md:hidden" >
       <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
-        <h2 class="text-lg max-md:text-md font-semibold mb-4">Proyectos Tendencia</h2>
+        <h2 class="text-lg max-md:text-md font-semibold mb-4">Lenguajes Tendencia</h2>
         <ul class="space-y-2">
           
             <li key={index} class="text-sm max-md:text-xs">
-              <a href="#" class="text-cyan-400 hover:underline">React</a>
+              <a href="https://www.python.org/" target="_blank" class="text-cyan-400 hover:underline">Python</a>
             </li>
 
             <li key={index} class="text-sm max-md:text-xs">
-              <a href="#" class="text-cyan-400 hover:underline">Django</a>
+              <a href="https://www.php.net/manual/es/intro-whatis.php" target="_blank" class="text-cyan-400 hover:underline">PHP</a>
             </li>
 
             <li key={index} class="text-sm max-md:text-xs">
-              <a href="#" class="text-cyan-400 hover:underline">Laravel</a>
+              <a href="https://dotnet.microsoft.com/es-es/languages/csharp" target="_blank" class="text-cyan-400 hover:underline">C#</a>
             </li>
           
         </ul>
@@ -471,14 +471,7 @@
           
         </ul>
       </div>
-      <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4">
-        <h2 class="text-lg max-md:text-md font-semibold mb-4">Actividad Reciente</h2>
-        <ul class="space-y-2 text-sm max-md:text-xs">
-          <li>Usuario1 comentó en tu publicación</li>
-          <li>Usuario2 le gustó tu proyecto</li>
-          <li>Usuario3 compartió tu artículo</li>
-        </ul>
-      </div>
+      
     </aside>
         
     </main>
