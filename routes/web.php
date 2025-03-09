@@ -3,6 +3,7 @@
 use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\SingleSignOnController;
 use App\Models\Post;
 use App\Models\User;
@@ -88,6 +89,15 @@ Route::middleware('auth')->group(function(){
     // Rutas de los perfiles
     Route::put('/editar/perfil', [ProfileController::class, 'updateProfile'])->name('profile.update');
     Route::get('/perfil/{user}', [ProfileController::class, 'show'])->name('profile.show');
+    // Grupos 
+    Route::get('/grupos', [GroupController::class, 'index'])->name('groups.index');
+    Route::get('/grupos/crear', [GroupController::class, 'create'])->name('groups.create');
+    Route::post('/grupos', [GroupController::class, 'store'])->name('groups.store');
+    Route::post('/grupos/unirse/{id}', [GroupController::class, 'join'])->name('groups.join');
+    Route::post('/grupos/salir/{id}', [GroupController::class, 'leave'])->name('groups.leave');
+    Route::get('/grupos/{group}', [GroupController::class, 'show'])->name('groups.show');
+
+
 });
 
 

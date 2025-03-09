@@ -18,7 +18,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('reaccions')->orderBy('created_at', 'desc')->get();
+        $posts = Post::with('reaccions')
+        ->whereNull('group_id') 
+        ->orderBy('created_at', 'desc')
+        ->get();
         $users = User::all();
         $categorias = Categoria::all();
         return view('pages.posts.index', compact('posts','users','categorias'));
@@ -40,7 +43,8 @@ class PostController extends Controller
             'content' => 'required|string|max:255',
             'media' => 'array|max:3',
             'media.*' => 'file|mimes:jpeg,jpg,png,webp,mp4|max:10240',
-            'categoria_id' => 'required|exists:categorias,id' 
+            'categoria_id' => 'required|exists:categorias,id',
+            'group_id' => 'nullable|exists:groups,id' 
         ]);
         
     
@@ -48,7 +52,8 @@ class PostController extends Controller
         $post = Post::create([
             'user_id' => Auth::id(), 
             'content' => $request->content,
-            'categoria_id' => $request->categoria_id
+            'categoria_id' => $request->categoria_id,
+            'group_id' => $request->group_id
         ]);
         
 
@@ -63,11 +68,11 @@ class PostController extends Controller
                 ]);
             }
         }else{
-            return redirect()->route('navegar');
+            return redirect()->back()->with('success', 'El posts se subió correctamente.');
             
         }
 
-        return redirect()->route('navegar');
+        return redirect()->back()->with('success', 'El posts se subió correctamente.');
 
     }
 
@@ -146,7 +151,8 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->route('navegar')->with('success', 'Publicación actualizada exitosamente');
+        return redirect()->back()->with('success', 'Post actualizado correctamente.');
+
     }
 
 
@@ -165,7 +171,7 @@ class PostController extends Controller
 
         $post->delete();
 
-        return redirect()->route('navegar')->with('success', 'Publicación eliminada correctamente');
+        return redirect()->back()->with('success', 'Post eliminado correctamente.');
 
     }
 

@@ -19,34 +19,22 @@
     
     {{-- Aside - Perfil --}}
     <aside class="w-64 pr-8 max-md:w-56 max-sm:hidden">
-      <div class="bg-[#05324f] rounded-lg p-5 mb-6 space-y-2">
-        <a href="{{route('profile.change')}}">
-          <img class="w-16 h-16 rounded-full" src="{{filter_var(Auth::user()->avatar, FILTER_VALIDATE_URL) ? Auth::user()->avatar : Storage::url(Auth::user()->avatar)}}" alt="user photo">
-        </a>
-        <h2 class="text-lg max-md:text-md font-semibold mb-1 text-white">{{(Auth::user()->name)}}</h2>
-        <p class="text-sm text-gray-300 max-md:text-xs">{{ Str::limit(Auth::user()->description, 80, '...') }}</p>
-        <form id="logout-form" action="{{ route('logout') }}" method="POST">
-          @csrf
-          <button class="px-2 py-1 text-md text-white bg-[#be2f2f] rounded-sm">
-            
-              Cerrar Sesión
-            
-            </button>
-      </form>
-      </div>
+      
       <nav class="space-y-5">
-        <button  class="w-full flex items-center  gap-5 cursor-pointer text-[#b3e534] translate-x-1 transition-all duration-300">
-          <i class="fa-solid fa-rocket"></i>
+        <button  class="w-full flex items-center  gap-5 cursor-pointer hover:text-[#b3e534] hover:translate-x-1 transition-all duration-300">
+            <a href="{{route('navegar')}}">
+            <i class="fa-solid fa-rocket"></i>
               
             <span class="font-bold max-md:text-md">Navegar</span>
+            </a>
           
         </button>
-        <button  class="w-full flex items-center  gap-5 cursor-pointer hover:text-[#b3e534] hover:translate-x-1 transition-all duration-300">
-          <a href="{{route('groups.index')}}">
+        <button  class="w-full flex items-center  gap-5 cursor-pointer text-[#b3e534] translate-x-1 transition-all duration-300">
+          
           <i class="fa-solid fa-users-line"></i>
               
               <span class="font-bold max-md:text-md">Grupos</span>
-          </a>
+          
         </button>
         <button  class="w-full flex items-center  gap-5 cursor-pointer hover:text-[#b3e534] hover:translate-x-1 transition-all duration-300">
           <a href="{{route('profile.change')}}">
@@ -83,13 +71,12 @@
           <h2 class="text-lg font-semibold mb-4 max-md:text-md">Personas para Seguir</h2>
           <ul class="space-y-4">
   
-            @foreach ($users as $user)
+            @foreach ($group->users as $user)
               <li class="flex items-center gap-2">
                 
                 <img class="w-8 h-8 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="user photo">
                 <div class="flex-1">
                   <p class="text-sm font-medium max-md:text-xs ">{{$user->name}}</p>
-                  <p class="text-xs text-gray-400">Desarrollador</p>
                 </div>
                 <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
                   Seguir
@@ -111,38 +98,50 @@
 
   
     <section class="flex-1 max-w-2xl mt-16  sm:mt-0">
+        <div class="bg-[#05324f] rounded-lg p-5 mb-6 space-y-2">
+            <h2 class="text-lg max-md:text-md font-semibold mb-1 text-white">{{($group->title)}}</h2>
+            <p class="text-sm text-gray-300 max-md:text-xs">{{ Str::limit($group->description, 80, '...') }}</p>
+          </div>
       <div class="bg-[#05324f] rounded-lg p-4 mb-6">
-        <form method="POST" action="{{route('post.store')}}" enctype="multipart/form-data">
-          @csrf
-          <textarea
-          rows="4"
-          name="content"
-          placeholder="¿Qué estás pensando?"
-          class="w-full bg-[#05324f] resize-none outline-none placeholder:text-gray-400 border-[#1e5072] text-gray-100 text-sm"
-        ></textarea>
-
-        <div class="flex justify-between items-end">
-          <select name="categoria_id" class="text-sm max-md:text-xs max-md:h-7 max-md:py-1 outline-none w-40 px-2 rounded-sm border-none bg-[#c6ff3a] text-[#1f1d1d] h-8"  >
-            @foreach ($categorias as $categoria)
-                <option value="{{$categoria->id}}">{{$categoria->nombre}}</option>
-            @endforeach
-          </select>
-        
-        
-        <div class="flex  mt-4 gap-3">
-          
-          <input id="fileInput" multiple name="media[]" type="file" class="hidden" />
-
-          <button type="button"  onclick="document.getElementById('fileInput').click()" class="cursor-pointer text-[#2e2e2e] bg-[#c6ff3a] hover:bg-[#b3e534]rounded-sm py-1 px-2 text-md rounded">
-            <i class="fa-solid fa-photo-film"></i>
-          </button>
-            
-          
-          <input class="max-md:text-xs cursor-pointer bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm text-[#1f1d1d]" variant="outline" size="sm" type="submit" value="Publicar"/>
-            
-        </div>
-        </div>
+        {{-- TODO: EL USUARIO EN SESIÓN DEBE ESTAR UNIDO PARA PUBLICAR ALGO --}}
+        @if ($user->groups->contains($group->id))
+        <form method="POST" action="{{ route('post.store') }}" enctype="multipart/form-data">
+            @csrf
+            <input type="hidden" name="group_id" value="{{ $group->id }}">
+    
+            <textarea
+                rows="4"
+                name="content"
+                placeholder="¿Qué estás pensando?"
+                class="w-full bg-[#05324f] resize-none outline-none placeholder:text-gray-400 border-[#1e5072] text-gray-100 text-sm"
+            ></textarea>
+    
+            <div class="flex justify-between items-end">
+                <select name="categoria_id" class="text-sm max-md:text-xs max-md:h-7 max-md:py-1 outline-none w-40 px-2 rounded-sm border-none bg-[#c6ff3a] text-[#1f1d1d] h-8">
+                    @foreach ($categorias as $categoria)
+                        <option value="{{ $categoria->id }}">{{ $categoria->nombre }}</option>
+                    @endforeach
+                </select>
+    
+                <div class="flex mt-4 gap-3">
+                    <input id="fileInput" multiple name="media[]" type="file" class="hidden" />
+    
+                    <button type="button" onclick="document.getElementById('fileInput').click()" class="cursor-pointer text-[#2e2e2e] bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm py-1 px-2 text-md">
+                        <i class="fa-solid fa-photo-film"></i>
+                    </button>
+    
+                    <input class="max-md:text-xs cursor-pointer bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm text-[#1f1d1d]" type="submit" value="Publicar"/>
+                </div>
+            </div>
         </form>
+    @else
+        <div class="text-center mt-4">
+            <a href="{{ route('group.join', ['group' => $group->id]) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                Unirse al grupo
+            </a>
+        </div>
+    @endif
+    
       </div>
 
       
@@ -413,61 +412,61 @@
         
     {{-- Right Bar  --}}
     <aside class="w-72 pl-8 max-md:hidden" >
-      <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
-        <h2 class="text-lg max-md:text-md font-semibold mb-4">Lenguajes Tendencia</h2>
-        <ul class="space-y-2">
-          
-            <li key={index} class="text-sm max-md:text-xs">
-              <a href="https://www.python.org/" target="_blank" class="text-cyan-400 hover:underline">Python</a>
-            </li>
-
-            <li key={index} class="text-sm max-md:text-xs">
-              <a href="https://www.php.net/manual/es/intro-whatis.php" target="_blank" class="text-cyan-400 hover:underline">PHP</a>
-            </li>
-
-            <li key={index} class="text-sm max-md:text-xs">
-              <a href="https://dotnet.microsoft.com/es-es/languages/csharp" target="_blank" class="text-cyan-400 hover:underline">C#</a>
-            </li>
-          
-        </ul>
-      </div>
-      <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
-        <h2 class="text-lg font-semibold mb-4 max-md:text-md">Personas para Seguir</h2>
-        <ul class="space-y-4">
-
-          {{-- TODO: Agregar texto cuando no haya personas registradas --}}
-          @foreach ($users->where('id', '!=', auth()->id())->take(5) as $user)
-            <li class="flex items-center gap-2">
-              <img class="w-8 h-8 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="user photo">
-              <div class="flex-1">
-                <p class="text-sm font-medium max-md:text-xs">{{$user->name}}</p>
-                <p class="text-xs text-gray-400">Desarrollador</p>
-              </div>
-              @if (auth()->user()->isFollowing($user))
-                  <form action="{{ route('unfollow', $user->id) }}" method="POST">
-                      @csrf
-                      <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
-                        Dejar de Seguir
-                      </button>
-                  </form>
-              @else
-                  <form action="{{ route('follow', $user->id) }}" method="POST">
-                      @csrf
-                      <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
-                        Seguir
-                      </button>
-                  </form>
-              @endif
-             
-            </li>
-          @endforeach
-          
+        <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
+          <h2 class="text-lg max-md:text-md font-semibold mb-4">Lenguajes Tendencia</h2>
+          <ul class="space-y-2">
             
-          
-        </ul>
-      </div>
-      
-    </aside>
+              <li key={index} class="text-sm max-md:text-xs">
+                <a href="https://www.python.org/" target="_blank" class="text-cyan-400 hover:underline">Python</a>
+              </li>
+  
+              <li key={index} class="text-sm max-md:text-xs">
+                <a href="https://www.php.net/manual/es/intro-whatis.php" target="_blank" class="text-cyan-400 hover:underline">PHP</a>
+              </li>
+  
+              <li key={index} class="text-sm max-md:text-xs">
+                <a href="https://dotnet.microsoft.com/es-es/languages/csharp" target="_blank" class="text-cyan-400 hover:underline">C#</a>
+              </li>
+            
+          </ul>
+        </div>
+        <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
+          <h2 class="text-lg font-semibold mb-4 max-md:text-md">Personas para Seguir</h2>
+          <ul class="space-y-4">
+  
+            {{-- TODO: Agregar texto cuando no haya personas registradas --}}
+            @foreach ($users->where('id', '!=', auth()->id())->take(5) as $user)
+              <li class="flex items-center gap-2">
+                <img class="w-8 h-8 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="user photo">
+                <div class="flex-1">
+                  <p class="text-sm font-medium max-md:text-xs">{{$user->name}}</p>
+                  <p class="text-xs text-gray-400">Desarrollador</p>
+                </div>
+                @if (auth()->user()->isFollowing($user))
+                    <form action="{{ route('unfollow', $user->id) }}" method="POST">
+                        @csrf
+                        <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
+                          Dejar de Seguir
+                        </button>
+                    </form>
+                @else
+                    <form action="{{ route('follow', $user->id) }}" method="POST">
+                        @csrf
+                        <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
+                          Seguir
+                        </button>
+                    </form>
+                @endif
+               
+              </li>
+            @endforeach
+            
+              
+            
+          </ul>
+        </div>
+        
+      </aside>
         
     </main>
 
@@ -561,3 +560,97 @@ function toggleRepost(postId) {
 
 </script> 
 @endsection
+
+
+{{-- 
+@foreach ($group->posts as $post)
+      <div  class="bg-[#05324f] rounded-lg p-5 mb-6">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <div class="flex items-start gap-3">
+            <img class="w-10 h-10 rounded-full" src="{{ filter_var($post->user->avatar, FILTER_VALIDATE_URL) ? $post->user->avatar : Storage::url($post->user->avatar) }}" alt="user photo">
+                <div>
+                    <a href="{{route('profile.show', ['user' => $post->user->id])}}" class="cursor-pointer hover:underline">
+                    <h3 class="font-semibold max-md:text-md">{{$post->user->name}}</h3>
+                    </a>
+                    <p class="text-sm text-gray-400 max-md:text-xs">{{$post->created_at->diffForHumans()}}</p>
+                </div>
+              </div>
+              @can('update', $post)
+              <div>
+                    <button class="w-6 h-6" variant="outline" size="sm" type="button" onclick="popupEdit()">
+                      <i class="fa-solid fa-pen text-sm hover:text-blue-400 transition-all duration-200"></i>
+                    </button>
+                    
+                    <button class="w-6 h-6" variant="outline" onclick="popupDelete()" size="sm">
+                      <i class="fa-solid fa-trash text-sm hover:text-red-400 transition-all duration-200"></i>
+                    </button>
+                    
+                  </div>
+                @endcan
+                
+            </div>
+            <p class="mb-4 text-white max-md:text-md">{{$post->content}}</p>
+            
+            @if (count($post->media) === 1)
+    <section class="w-full h-[350px] mb-4 rounded-md overflow-hidden">
+        @foreach ($post->media as $media)
+            @if (Str::startsWith($media->type, 'video'))
+                <video class="w-full h-full object-cover" controls>
+                    <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->type }}">
+                    Tu navegador no soporta la reproducción de videos.
+                </video>
+            @else
+                <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full block object-cover" alt="Media de la publicación">
+            @endif
+        @endforeach
+    </section>
+@elseif (count($post->media) === 2)
+    <section class="w-full h-[390px] mb-4 rounded-md overflow-hidden grid grid-cols-2 gap-1">
+        @foreach ($post->media as $media)
+            <div class="w-full h-full">
+                @if (Str::startsWith($media->type, 'video'))
+                    <video class="w-full h-full object-cover" controls>
+                        <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->type }}">
+                        Tu navegador no soporta la reproducción de videos.
+                    </video>
+                @else
+                    <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full block object-cover" alt="Media de la publicación">
+                @endif
+            </div>
+        @endforeach
+    </section>
+@elseif (count($post->media) === 3)
+    <section class="w-full h-[390px] mb-4 rounded-md overflow-hidden grid grid-cols-3 gap-1">
+        @foreach ($post->media as $index => $media)
+            @if ($index === 0)
+                <div class="col-span-2 row-span-2">
+                    @if (Str::startsWith($media->type, 'video'))
+                        <video class="w-full h-full object-cover" controls>
+                            <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->type }}">
+                            Tu navegador no soporta la reproducción de videos.
+                        </video>
+                    @else
+                        <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full object-cover" alt="Media de la publicación">
+                    @endif
+                </div>
+            @else
+                <div class="w-full h-full">
+                    @if (Str::startsWith($media->type, 'video'))
+                        <video class="w-full h-full object-cover" controls>
+                            <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->type }}">
+                            Tu navegador no soporta la reproducción de videos.
+                        </video>
+                    @else
+                        <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full object-cover" alt="Media de la publicación">
+                    @endif
+                </div>
+            @endif
+        @endforeach
+        
+    </section>
+@endif
+
+</div> <!-- Cierre del div de post -->
+@endforeach
+
+--}}

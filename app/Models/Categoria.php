@@ -15,4 +15,8 @@ class Categoria extends Model
         $this->hasMany(Post::class);
     }
 
+    // public function groups(){
+    //     $this->hasMany(Group::class);
+    // }
+
 }

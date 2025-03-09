@@ -14,11 +14,13 @@ class Post extends Model
         'user_id', 
         'content', 
         'media',
-        'categoria_id'
+        'categoria_id',
+        'group_id'
     ];
 
     protected $casts = [
         'categoria_id' => 'integer',
+        'group_id' => 'integer',
     ];
     
 
@@ -42,5 +44,10 @@ class Post extends Model
     public function categoria()
     {
         return $this->belongsTo(Categoria::class);
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(Group::class);
     }
 }
