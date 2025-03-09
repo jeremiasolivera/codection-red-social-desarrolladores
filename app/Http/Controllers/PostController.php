@@ -192,6 +192,29 @@ class PostController extends Controller
     ]);
 }
 
+ //Repost método
+ public function repost(Request $request, $id)
+ {
+     $post = Post::findOrFail($id);
+     $user = Auth::user();
+ 
+     $repost = $post->reposts()->where('user_id', $user->id)->first();
+ 
+     if ($repost) {
+         $repost->delete();
+         $reposted = false;
+     } else {
+         $post->reposts()->create(['user_id' => $user->id]);
+         $reposted = true;
+     }
+ 
+     return response()->json([
+         'count' => $post->reposts()->count(),
+         'reposted' => $reposted,
+     ]);
+ }
+ 
+
 
 }
 

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
     /**
@@ -23,20 +24,43 @@ class ProfileController extends Controller
     }
 
     public function updateProfile(Request $request)
-    {
-        // dd($request->description);
-        $request->validate([
-            'description' => 'max:500',
-            'github_url' => 'nullable|url|max:255',
-        ]);
-    
-        Auth::user()->update([
-            'description' => $request->input('description'),
-            'github_url' => $request->input('github_url')
-        ]);
+{
+    $request->validate([
+        'description' => 'max:500',
+        'github_url' => 'nullable|url|max:255',
+        'avatar' => 'nullable|image|mimes:jpg,jpeg,png|max:2048', 
+        'name' => 'nullable|max:20', 
+    ]);
 
-        return redirect()->back()->with('success', 'Perfil actualizado correctamente.');
-    }    
+    $user = Auth::user();
+
+    
+    if ($request->hasFile('avatar')) {
+        // Elimina la imagen anterior si existe
+        if ($user->avatar) {
+            Storage::delete('public/' . $user->avatar);
+        }
+
+        // Guarda la nueva imagen
+        $file = $request->file('avatar');
+        $path = $file->store('media', 'public');
+        $type = $file->getMimeType();
+
+        // Actualiza la imagen en la BD
+        $user->avatar = $path;
+    }
+
+    
+    $user->update([
+        'description' => $request->input('description'),
+        'github_url' => $request->input('github_url'),
+        'name' => $request->input('name'),
+        'avatar' => $user->avatar ?? $user->avatar, 
+    ]);
+
+    return redirect()->back()->with('success', 'Perfil actualizado correctamente.');
+}
+
 
     /**
      * Update the user's profile information.
@@ -78,6 +102,11 @@ class ProfileController extends Controller
 
     public function show(User $user){
         $posts = Post::where('user_id', $user->id)->latest()->get();
-        return view('pages.perfiles.other_profile', compact('user','posts'));
+        $reposts = Post::whereHas('reposts', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->with('user')
+        ->latest()
+        ->get();
+        return view('pages.perfiles.other_profile', compact('user','posts','reposts'));
     }
 }

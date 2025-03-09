@@ -35,8 +35,13 @@ Route::get('/dashboard', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/perfil', function(){
         $posts = Post::where('user_id', Auth::id())->latest()->get(); // Filtra los posts del usuario autenticado
-     
-        return view('pages.perfiles.profile', compact('posts'));
+        $reposts = Post::whereHas('reposts', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->with('user') 
+        ->latest()
+        ->get();
+        
+        return view('pages.perfiles.profile', compact('posts','reposts'));
     })->name('profile.change');
     Route::post('/profile', function(Request $request){
         
@@ -76,7 +81,8 @@ Route::middleware('auth')->group(function(){
     Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
     Route::put('/post/edit/{post}', [PostController::class, 'update'])->name('post.update');
     Route::delete('/post/{post}', [PostController::class, 'destroy'])->name('post.destroy');
-    Route::post('/posts/{post}/reaccion', [PostController::class, 'reaccion'])->name('posts.reaccion'); 
+    Route::post('/posts/{post}/reaccion', [PostController::class, 'reaccion'])->name('posts.reaccion');
+    Route::post('/posts/{id}/repost', [PostController::class, 'repost'])->middleware('auth'); 
     Route::post('/follow/{user}', [FollowController::class, 'follow'])->name('follow');
     Route::post('/unfollow/{user}', [FollowController::class, 'unfollow'])->name('unfollow');
     // Rutas de los perfiles

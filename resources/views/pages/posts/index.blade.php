@@ -190,35 +190,64 @@
             <p class="mb-4 text-white max-md:text-md">{{$post->content}}</p>
             
             @if (count($post->media) === 1)
-              <section class="w-full h-[350px] mb-4 rounded-md overflow-hidden">
-                @foreach ($post->media as $media)
-                    <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full block object-cover" alt="Media de la publicación">
-                @endforeach
-              </section>
-            @elseif (count($post->media) === 2)
-            <section class="w-full h-[390px] mb-4 rounded-md overflow-hidden grid grid-rows-2 gap-1">
-              @foreach ($post->media as $media)
-                  <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full block object-cover" alt="Media de la publicación">
-              @endforeach
-            </section>
-            @elseif (count($post->media) === 3)
-            <section class="w-full h-[390px] mb-4 rounded-md overflow-hidden grid grid-cols-3 gap-1">
-              @foreach ($post->media as $index => $media)
-                  @if ($index === 0)
-                      <div class="col-span-2 row-span-2">
-                          <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full object-cover" alt="Media de la publicación">
-                      </div>
-                  @else
-                      <div>
-                          <img src="{{ asset('storage/' . $media->path) }}" class="w-full object-cover" alt="Media de la publicación">
-                      </div>
-                  @endif
-              @endforeach
-            </section>
-              
-
+    <section class="w-full h-[350px] mb-4 rounded-md overflow-hidden">
+        @foreach ($post->media as $media)
+            @if (Str::startsWith($media->type, 'video'))
+                <video class="w-full h-full object-cover" controls>
+                    <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->type }}">
+                    Tu navegador no soporta la reproducción de videos.
+                </video>
+            @else
+                <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full block object-cover" alt="Media de la publicación">
             @endif
+        @endforeach
+    </section>
+@elseif (count($post->media) === 2)
+    <section class="w-full h-[390px] mb-4 rounded-md overflow-hidden grid grid-cols-2 gap-1">
+        @foreach ($post->media as $media)
+            <div class="w-full h-full">
+                @if (Str::startsWith($media->type, 'video'))
+                    <video class="w-full h-full object-cover" controls>
+                        <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->type }}">
+                        Tu navegador no soporta la reproducción de videos.
+                    </video>
+                @else
+                    <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full block object-cover" alt="Media de la publicación">
+                @endif
+            </div>
+        @endforeach
+    </section>
+@elseif (count($post->media) === 3)
+    <section class="w-full h-[390px] mb-4 rounded-md overflow-hidden grid grid-cols-3 gap-1">
+        @foreach ($post->media as $index => $media)
+            @if ($index === 0)
+                <div class="col-span-2 row-span-2">
+                    @if (Str::startsWith($media->type, 'video'))
+                        <video class="w-full h-full object-cover" controls>
+                            <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->type }}">
+                            Tu navegador no soporta la reproducción de videos.
+                        </video>
+                    @else
+                        <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full object-cover" alt="Media de la publicación">
+                    @endif
+                </div>
+            @else
+                <div class="w-full h-full">
+                    @if (Str::startsWith($media->type, 'video'))
+                        <video class="w-full h-full object-cover" controls>
+                            <source src="{{ asset('storage/' . $media->path) }}" type="{{ $media->type }}">
+                            Tu navegador no soporta la reproducción de videos.
+                        </video>
+                    @else
+                        <img src="{{ asset('storage/' . $media->path) }}" class="w-full h-full object-cover" alt="Media de la publicación">
+                    @endif
+                </div>
+            @endif
+        @endforeach
+    </section>
+@endif
 
+            
            
             {{-- Pop Up Delete --}}
 
@@ -295,7 +324,14 @@
                             <div class="flex gap-2 justify-start">
                             @foreach($post->media as $image)
                               <div class="w-20 h-20 rounded-sm overflow-hidden ">
+                                @if (Str::startsWith($image->type, 'video'))
+                                <video class="w-full h-full object-cover" controls>
+                                    <source src="{{ asset('storage/' . $image->path) }}" type="{{ $image->type }}">
+                                    Tu navegador no soporta la reproducción de videos.
+                                </video>
+                                @else
                                 <img src="{{ asset('storage/' . $image->path) }}" class="w-full h-full object-cover" alt="Media de la publicación">
+                                @endif
                               </div>
                               @endforeach
                             </div>
@@ -357,11 +393,15 @@
                   @endif
                 </button>
   
-                  <button variant="ghost" size="sm" class="flex items-center gap-2">
-                    <span class="">2</span>
-                    <i class="fa-solid fa-arrows-rotate"></i>
-  
-                  </button>
+                <button onclick="toggleRepost({{ $post->id }})" class="flex items-center gap-2" id="repost-btn-{{ $post->id }}">
+                  <span id="repost-count-{{ $post->id }}">{{ $post->reposts->count() }}</span>
+                  @if ($post->reposts->where('user_id', Auth::id())->count())
+                      <i id="repost-icon-{{ $post->id }}" class="fa-solid fa-arrows-rotate text-[#b3e534]"></i> 
+                  @else
+                      <i id="repost-icon-{{ $post->id }}" class="fa-solid fa-arrows-rotate"></i>
+                  @endif
+              </button>
+              
   
                   @if ($post->editado === 1)
                       <span class="text-sm text-gray-400">Editado</span>
@@ -517,7 +557,7 @@
   }
 
 
-
+  // Like función
   function toggleLike(postId) {
 fetch(`/posts/${postId}/reaccion`, {
     method: 'POST',
@@ -555,6 +595,29 @@ if(alertValidator){
         el.style.display = 'none'
       }, 5000);
   });
+}
+
+// Repost función
+function toggleRepost(postId) {
+    fetch(`/posts/${postId}/repost`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`repost-count-${postId}`).textContent = data.count;
+
+        const repostIcon = document.getElementById(`repost-icon-${postId}`);
+        if (data.reposted) {
+            repostIcon.classList.add('text-[#b3e534]');
+        } else {
+            repostIcon.classList.remove('text-[#b3e534]');
+        }
+    })
+    .catch(error => console.error('Error:', error));
 }
 
 

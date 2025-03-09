@@ -56,13 +56,17 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Post::class);
     }
 
-
     public function posts(){
         $this->hasMany(Post::class);
     }
 
     public function reaccions(){
         $this->hasMany(Reaccion::class);
+    }
+
+    public function reposts()
+    {
+        return $this->hasMany(Repost::class);
     }
 
     # Módulo de Seguidores

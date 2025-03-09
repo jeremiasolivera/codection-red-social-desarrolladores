@@ -30,6 +30,10 @@ class Post extends Model
     public function reaccions(){
         return $this->hasMany(Reaccion::class);
     }
+    public function reposts()
+    {
+        return $this->hasMany(Repost::class);
+    }
 
     public function media(){
         return $this->hasMany(Media::class);
