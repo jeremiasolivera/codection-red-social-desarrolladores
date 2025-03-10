@@ -93,8 +93,8 @@ return [
     'max' => [
         'array' => 'No puedes elegir más de :max imágenes.',
         'file' => 'El contenido subido es demasiado grande.',
-        'numeric' => 'The :attribute field must not be greater than :max.',
-        'string' => 'The :attribute field must not be greater than :max characters.',
+        'numeric' => 'La número es demasiado grande.',
+        'string' => 'El :attribute texto es demasiado larga.',
     ],
     'max_digits' => 'The :attribute field must not have more than :max digits.',
     'mimes' => 'El contenido debe ser en formato: :values.',

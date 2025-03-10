@@ -96,7 +96,10 @@ Route::middleware('auth')->group(function(){
     Route::post('/grupos/unirse/{id}', [GroupController::class, 'join'])->name('groups.join');
     Route::post('/grupos/salir/{id}', [GroupController::class, 'leave'])->name('groups.leave');
     Route::get('/grupos/{group}', [GroupController::class, 'show'])->name('groups.show');
+    Route::delete('/groupos/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
 
+    Route::get('/groups/{group}/edit', [GroupController::class, 'edit'])->name('groups.edit');
+    Route::put('/groups/{group}', [GroupController::class, 'update'])->name('groups.update');
 
 });
 

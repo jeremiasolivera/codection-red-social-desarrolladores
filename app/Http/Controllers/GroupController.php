@@ -27,8 +27,8 @@ class GroupController extends Controller
     {
         // dd($request);
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'title' => 'required|string|max:55',
+            'description' => 'nullable|string|max:100',
             'categoria_id' => 'required|exists:categorias,id'
         ]);
 
@@ -75,5 +75,47 @@ class GroupController extends Controller
         return view('pages.grupos.show', compact('group','categorias','users','posts'));
     }
 
+    public function destroy(Group $group)
+    {
+        if (auth()->user()->id !== $group->user_id) {
+            return redirect()->back()->with('error', 'No tienes permiso para eliminar este grupo.');
+        }
+
+        $group->delete();
+
+        return redirect()->route('groups.index')->with('success', 'Grupo eliminado correctamente.');
+    }
+
+    public function edit(Group $group)
+    {
+        if (auth()->user()->id !== $group->user_id) {
+            return redirect()->back()->with('error', 'No tienes permiso para editar este grupo.');
+        }
+        $categorias = Categoria::all();
+
+
+        return view('pages.grupos.edit', compact('group','categorias'));
+    }
+
+    public function update(Request $request, Group $group)
+    {
+        if (auth()->user()->id !== $group->user_id) {
+            return redirect()->back()->with('error', 'No tienes permiso para actualizar este grupo.');
+        }
+
+        $request->validate([
+            'title' => 'required|string|max:50',
+            'description' => 'nullable|string|max:100',
+            'categoria_id' => 'required|exists:categorias,id',
+        ]);
+
+        $group->update([
+            'title' => $request->title,
+            'description' => $request->description,
+            'categoria_id' => $request->categoria_id,
+        ]);
+
+        return redirect()->route('groups.show', $group->id)->with('success', 'Grupo actualizado correctamente.');
+    }
     
 }

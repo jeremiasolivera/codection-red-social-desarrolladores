@@ -29,13 +29,13 @@
             </a>
           
         </button>
-        <button  class="w-full flex items-center  gap-5 cursor-pointer text-[#b3e534] translate-x-1 transition-all duration-300">
-          
-          <i class="fa-solid fa-users-line"></i>
-              
-              <span class="font-bold max-md:text-md">Grupos</span>
-          
-        </button>
+        <button  class="w-full flex items-center  gap-5 cursor-pointer hover:text-[#b3e534] hover:translate-x-1 transition-all duration-300">
+            <a href="{{route('groups.index')}}">
+            <i class="fa-solid fa-users-line"></i>
+                
+                <span class="font-bold max-md:text-md">Grupos</span>
+            </a>
+          </button>
         <button  class="w-full flex items-center  gap-5 cursor-pointer hover:text-[#b3e534] hover:translate-x-1 transition-all duration-300">
           <a href="{{route('profile.change')}}">
 
@@ -98,13 +98,13 @@
 
   
     <section class="flex-1 max-w-2xl mt-16  sm:mt-0">
-        <div class="bg-[#05324f] rounded-lg p-5 mb-6 space-y-2">
-            <h2 class="text-lg max-md:text-md font-semibold mb-1 text-white">{{($group->title)}}</h2>
+        <div class="bg-[#05324f] rounded-lg p-5 mb-6 space-y-2"> 
+            <h2 class="text-xl max-md:text-md font-semibold mb-1 text-[#b3e534]">{{($group->title)}}</h2>
             <p class="text-sm text-gray-300 max-md:text-xs">{{ Str::limit($group->description, 80, '...') }}</p>
           </div>
       <div class="bg-[#05324f] rounded-lg p-4 mb-6">
         {{-- TODO: EL USUARIO EN SESIÓN DEBE ESTAR UNIDO PARA PUBLICAR ALGO --}}
-        @if ($user->groups->contains($group->id))
+        @if (auth()->check() && auth()->user()->groups->contains($group->id))
         <form method="POST" action="{{ route('post.store') }}" enctype="multipart/form-data">
             @csrf
             <input type="hidden" name="group_id" value="{{ $group->id }}">
@@ -135,11 +135,11 @@
             </div>
         </form>
     @else
-        <div class="text-center mt-4">
-            <a href="{{ route('group.join', ['group' => $group->id]) }}" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                Unirse al grupo
-            </a>
-        </div>
+        <form action="{{ route('groups.join', $group->id) }}" method="POST" class="flex justify-between items-center">
+            @csrf
+            <p class="text-md text-gray-300">Para subir una publicación debes Unirte: </p>
+            <button class="bg-[#b3e534] text-gray-600 px-4 py-2 rounded">Unirse</button>
+        </form>
     @endif
     
       </div>
@@ -412,29 +412,19 @@
         
     {{-- Right Bar  --}}
     <aside class="w-72 pl-8 max-md:hidden" >
-        <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
-          <h2 class="text-lg max-md:text-md font-semibold mb-4">Lenguajes Tendencia</h2>
-          <ul class="space-y-2">
+        <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6 flex justify-center">
+          <form action="{{ route('groups.leave', $group->id) }}" method="POST">
+            @csrf
+            <button class="bg-red-500 text-white px-2 py-1 text-lg rounded ">Salir del grupo</button>
+            </form>
             
-              <li key={index} class="text-sm max-md:text-xs">
-                <a href="https://www.python.org/" target="_blank" class="text-cyan-400 hover:underline">Python</a>
-              </li>
-  
-              <li key={index} class="text-sm max-md:text-xs">
-                <a href="https://www.php.net/manual/es/intro-whatis.php" target="_blank" class="text-cyan-400 hover:underline">PHP</a>
-              </li>
-  
-              <li key={index} class="text-sm max-md:text-xs">
-                <a href="https://dotnet.microsoft.com/es-es/languages/csharp" target="_blank" class="text-cyan-400 hover:underline">C#</a>
-              </li>
-            
-          </ul>
         </div>
         <div class="bg-[#05324f] bg-opacity-50 rounded-lg p-4 mb-6">
           <h2 class="text-lg font-semibold mb-4 max-md:text-md">Personas para Seguir</h2>
           <ul class="space-y-4">
   
             {{-- TODO: Agregar texto cuando no haya personas registradas --}}
+            
             @foreach ($users->where('id', '!=', auth()->id())->take(5) as $user)
               <li class="flex items-center gap-2">
                 <img class="w-8 h-8 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="user photo">

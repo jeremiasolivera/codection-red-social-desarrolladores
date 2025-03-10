@@ -16,25 +16,29 @@
               <div class="mt-3 text-center  sm:mt-0 sm:text-left">
                 <h3 class="text-lg font-semibold text-red-400 pb-2">Crear Grupo</h3>
                 
-                    <form method="POST" action="{{ route('groups.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('groups.update', $group->id) }}" enctype="multipart/form-data">
                       @csrf
-                      @method('POST')
+                      @method('PUT')
                       <p class="text-gray-300 text-md pb-2">Nombre de grupo:</p>
-                    <input class="mb-3 w-full bg-[#05324f] resize-none outline-none placeholder:text-gray-400 border-[#1e5072] text-gray-100 text-sm" type="text" name="title" placeholder="Nuevo Grupo" >
+                    <input class="mb-3 w-full bg-[#05324f] resize-none outline-none placeholder:text-gray-400 border-[#1e5072] text-gray-100 text-sm" type="text" name="title" placeholder="Nuevo Grupo" value="{{ old('name', $group->title) }}">
                     <p class="text-gray-300 text-md pb-2">Descripción:</p>
                       <textarea
                       rows="8"                                
                       name="description"
                       placeholder="¿Cuáles son tus cualidades?"
                       class="w-full bg-[#05324f] resize-none outline-none placeholder:text-gray-400 border-[#1e5072] text-gray-100 text-sm"
-                    ></textarea>
+                    >{{ old('description', $group->description) }}</textarea>
                     <p class="text-gray-300 text-md pb-2">Categoría:</p>
 
-                    <select name="categoria_id" class="text-sm max-md:text-xs max-md:h-7 max-md:py-1 outline-none w-40 px-2 rounded-sm border-none bg-[#c6ff3a] text-[#1f1d1d] h-8 mb-5"  >
+                    <select name="categoria_id" class="text-sm w-40 px-2 rounded-sm border-none bg-[#c6ff3a] text-[#1f1d1d] h-8 mb-2">
                         @foreach ($categorias as $categoria)
-                            <option value="{{$categoria->id}}">{{$categoria->nombre}}</option>
+                            <option value="{{ $categoria->id }}" 
+                                {{ old('categoria_id', $group->categoria_id) == $categoria->id ? 'selected' : '' }}>
+                                {{ $categoria->nombre }}
+                            </option>
                         @endforeach
-                      </select>
+                    </select>
+                    
                       <br>
                     
                       @if ($errors->any())
