@@ -40,6 +40,7 @@
   <ul class="mt-4">
     
     <div id="mis-grupos-container">
+        @if($misgroups->count() > 0)
         @foreach($misgroups as $group)
             <li class="p-4 border-b flex justify-between">
                 <div >
@@ -97,9 +98,14 @@
                 
             </li>
         @endforeach
+        @else
+        <div class="w-full text-gray-300 text-center mt-10">Aún no has creado un grupo</div>
+
+        @endif
       </div>
 
       <div id="sus-grupos-container">
+        @if($groups->count() > 0)
         @foreach($groups as $group)
             <li class="p-4 border-b flex justify-between">
                 <div >
@@ -157,6 +163,10 @@
                 
             </li>
         @endforeach
+        @else
+        <div class="w-full text-gray-300 text-center mt-10">No se crearon grupos</div>
+
+        @endif
       </div>
   </ul>
 
