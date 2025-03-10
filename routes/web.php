@@ -6,6 +6,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\SingleSignOnController;
 use App\Models\Post;
+use App\Models\Categoria;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -29,9 +30,18 @@ Route::get('/{provider}-auth/callback', [SingleSignOnController::class, 'singleS
 //--------------------------------------------------------------------------------------
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/navegar', function () {
+        $posts = Post::with('reaccions')
+        ->whereNull('group_id') 
+        ->orderBy('created_at', 'desc')
+        ->get();
+        $users = User::all();
+        $categorias = Categoria::all();
+        return view('pages.posts.index', compact('posts','users','categorias'));
+    })->name('navegar');
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/perfil', function(){
@@ -76,7 +86,7 @@ Route::middleware('auth')->group(function () {
 // ****Rutas Posts****
 Route::middleware('auth')->group(function(){
     // Route::resource('posts', PostController::class);
-    Route::get('/navegar', [PostController::class, 'index'])->name('navegar');
+    // Route::get('/navegar', [PostController::class, 'index'])->name('navegar');
     //Route::get('/post/edit', [PostController::class, 'edit'])->name('post.edit');
     // Rutas de las publicaciones
     Route::post('/post/store', [PostController::class, 'store'])->name('post.store');

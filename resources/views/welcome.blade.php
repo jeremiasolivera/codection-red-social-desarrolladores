@@ -7,53 +7,40 @@
       <div class="min-h-screen flex fle-col items-center justify-center py-6 px-4">
         <div class="grid md:grid-cols-2 items-center gap-10 max-w-6xl w-full">
           <div>
-            <h2 class="lg:text-5xl text-4xl font-extrabold lg:leading-[55px] text-gray-800">
-              Bienvenido a nuestra red social
+            <h2 class="lg:text-5xl text-4xl font-extrabold lg:leading-[55px] text-white">
+              Bienvenido a Codection
             </h2>
-            <p class="text-sm mt-6 text-gray-800">Immerse yourself in a hassle-free login journey with our intuitively designed login form. Effortlessly access your account.</p>
-            <p class="text-sm mt-12 text-gray-800">Don't have an account <a href="{{route('register')}}" class="text-blue-600 font-semibold hover:underline ml-1">Register here</a></p>
+            <p class="text-lg mt-6 text-[#b3e534] font-semibold">Nuestra red social para desarrolladores de habla hispana.</p>
+            <p class="text-sm mt-12 text-gray-800 text-center"><a href="{{route('register')}}" class="text-blue-400 text-lg  hover:underline ml-1">Registrate aquí</a></p>
           </div>
   
           <form class="max-w-md md:ml-auto w-full" method="POST" action="{{route('login')}}">
             @csrf
-            <h3 class="text-gray-800 text-3xl font-extrabold mb-8">
-              Sign in
+            <h3 class="text-white text-3xl font-extrabold mb-8">
+              Inicia Sesión
             </h3>
   
             <div class="space-y-4">
               <div>
-                <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                <x-input-label for="email" :value="__('Email')"/>
+            <x-text-input id="email" class="block mt-1 w-full text-black" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2 " />
               </div>
               <div>
-                <x-input-label for="password" :value="__('Password')" />
+                <x-input-label for="password" :value="__('Contraseña')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
+            <x-text-input id="password" class="block mt-1 w-full text-black"
                             type="password"
                             name="password"
                             required autocomplete="current-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
               </div>
-              <div class="flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center">
-                  <input id="remember-me" name="remember-me" type="checkbox" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" />
-                  <label for="remember-me" class="ml-3 block text-sm text-gray-800">
-                    Remember me
-                  </label>
-                </div>
-                <div class="text-sm">
-                  <a href="jajvascript:void(0);" class="text-blue-600 hover:text-blue-500 font-semibold">
-                    Forgot your password?
-                  </a>
-                </div>
-              </div>
             </div>
   
             <div class="!mt-8">
-              <x-primary-button class="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-white bg-blue-600 hover:bg-blue-700 focus:outline-none text-center">
-                {{ __('Log in') }}
+              <x-primary-button class="w-full shadow-xl py-2.5 px-4 text-sm font-semibold rounded text-gray-600 bg-[#b3e534] hover:bg-[#91b634] focus:outline-none text-center">
+                {{ __('Iniciar Sesión') }}
             </x-primary-button>
             </div>
   
@@ -74,7 +61,7 @@
                 <svg
                 viewBox="0 0 261 257"
                 width="32px"
-                fill="#24292f"
+                fill="white"
                 xmlns="http://www.w3.org/2000/svg"
                 preserveAspectRatio="xMidYMid"
             >

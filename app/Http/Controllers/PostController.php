@@ -18,13 +18,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::with('reaccions')
-        ->whereNull('group_id') 
-        ->orderBy('created_at', 'desc')
-        ->get();
-        $users = User::all();
-        $categorias = Categoria::all();
-        return view('pages.posts.index', compact('posts','users','categorias'));
+        
     }
 
     /**

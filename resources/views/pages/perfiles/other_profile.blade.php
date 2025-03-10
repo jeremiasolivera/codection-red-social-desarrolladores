@@ -19,7 +19,7 @@
   <div class="flex gap-10">
     <div>
       <div class="bg-[#05324f] rounded-lg ">
-        <img class="w-28 h-28 max-md:w-16 max-md:h-16 rounded-full" src="{{$user->avatar}}" alt="Imagen de {{$user->name}}">
+        <img class="w-28 h-28 max-md:w-16 max-md:h-16 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="Imagen de {{$user->name}}">
         
       </div>
     </div>
@@ -61,10 +61,18 @@
   </div>
 {{-- Actividades de usuario --}}
 <div class="flex gap-3">
+    @if ($user->description)
   <div class="w-80 max-h-96 bg-[#05324f] rounded-lg p-5 mb-6 hidden md:block">
     <h1 class="font-bold text-xl pb-4">Sobre {{$user->name}}</h1>
     <p class="text-white text-md max-md:text-sm break-words ">{{ $user->description }}</p>
   </div>
+  @else
+  <div class="w-80 max-h-96 bg-[#05324f] rounded-lg p-5 mb-6 hidden md:block">
+    <h1 class="font-bold text-xl pb-4">Sobre {{$user->name}}</h1>
+  <p class="w-full text-sm text-center text-gray-400 mt-2">Usuarios sin descripción</p>
+</div>
+
+  @endif
   <div class="flex-1 max-full mt-16 sm:mt-0">
     <section class="flex gap-2 justify-center">
       <button  class="rounded-md p-2 flex items-center  gap-5 cursor-pointer bg-[#05324f] text-[#b3e534] translate-x-1 transition-all duration-300 hover:bg-[#1b5f8d]" id="sus-posts">

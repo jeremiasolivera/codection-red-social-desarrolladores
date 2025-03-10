@@ -53,7 +53,7 @@ class SingleSignOnController extends Controller
         
             Auth::login($user);
         
-            return redirect('/dashboard');
+            return redirect('/navegar');
       
     }
 }

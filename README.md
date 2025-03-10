@@ -13,3 +13,5 @@
 3. Corremos el comando para migrar la tabla: *php artisan migrate*
 4. Definir la relación UnoaMuchos en la clase del usuario
 5. Creamos un controlador: php artisan make:controller FollowController
+
+<!-- TODO: hacer la pagína 404 not found -->

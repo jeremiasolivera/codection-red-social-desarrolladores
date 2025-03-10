@@ -76,7 +76,10 @@
                 
                 <img class="w-8 h-8 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="user photo">
                 <div class="flex-1">
-                  <p class="text-sm font-medium max-md:text-xs ">{{$user->name}}</p>
+                  <a href="{{route('profile.show', ['user' => $user->id])}}" class="cursor-pointer hover:underline">
+
+                    <p class="text-sm font-medium max-md:text-xs ">{{$user->name}}</p>
+                  </a>
                 </div>
                 <button class="bg-[#c6ff3a] hover:bg-[#b3e534] rounded-sm p-1 px-2 text-sm max-md:text-xs text-[#1f1d1d]">
                   Seguir
@@ -429,8 +432,10 @@
               <li class="flex items-center gap-2">
                 <img class="w-8 h-8 rounded-full" src="{{filter_var($user->avatar, FILTER_VALIDATE_URL) ? $user->avatar : Storage::url($user->avatar)}}" alt="user photo">
                 <div class="flex-1">
+                  <a href="{{route('profile.show', ['user' => $user->id])}}" class="cursor-pointer hover:underline">
+
                   <p class="text-sm font-medium max-md:text-xs">{{$user->name}}</p>
-                  <p class="text-xs text-gray-400">Desarrollador</p>
+                  </a>
                 </div>
                 @if (auth()->user()->isFollowing($user))
                     <form action="{{ route('unfollow', $user->id) }}" method="POST">
