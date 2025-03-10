@@ -71,11 +71,20 @@
   </form>
     
   </div>
+  
 </div>
+<div class="w-full max-h-96 bg-[#05324f] rounded-lg p-5 mb-3 mt-3 block md:hidden">
+    <h1 class="font-bold text-xl pb-4 ">Sobre mí</h1>
+    @if (Auth::user()->description > 0)
+    <p class="text-white text-md max-md:text-sm break-words ">{{ Auth::user()->description }}</p>
+    @else
+    <p class="w-full text-sm text-center text-gray-400 mt-2">Agrega una descripción para que los usuarios te conozcan</p>
+    @endif
+  </div>
 {{-- Actividades de usuario --}}
 <div class="flex gap-3">
-  <div class="w-80 max-h-96 bg-[#05324f] rounded-lg p-5 mb-6">
-    <h1 class="font-bold text-xl pb-4">Sobre mí</h1>
+  <div class="w-80 max-h-96 bg-[#05324f] rounded-lg p-5 mb-6 hidden md:block">
+    <h1 class="font-bold text-xl pb-4 ">Sobre mí</h1>
     @if (Auth::user()->description > 0)
     <p class="text-white text-md max-md:text-sm break-words ">{{ Auth::user()->description }}</p>
     @else

@@ -14,7 +14,9 @@ class GroupController extends Controller
     public function index()
     {
         $groups = Group::orderBy('created_at', 'desc')->get();
-        return view('pages.grupos.index', compact('groups'));
+        $misgroups = Group::where('user_id', Auth::id())->get();
+
+        return view('pages.grupos.index', compact('groups','misgroups'));
     }
 
     public function create()

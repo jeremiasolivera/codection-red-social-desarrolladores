@@ -55,9 +55,13 @@
     
   </div>
 </div>
+<div class="w-full max-h-96 bg-[#05324f] rounded-lg p-5 mb-3 block md:hidden">
+    <h1 class="font-bold text-xl pb-4">Sobre {{$user->name}}</h1>
+    <p class="text-white text-md max-md:text-sm break-words ">{{ $user->description }}</p>
+  </div>
 {{-- Actividades de usuario --}}
 <div class="flex gap-3">
-  <div class="w-80 max-h-96 bg-[#05324f] rounded-lg p-5 mb-6">
+  <div class="w-80 max-h-96 bg-[#05324f] rounded-lg p-5 mb-6 hidden md:block">
     <h1 class="font-bold text-xl pb-4">Sobre {{$user->name}}</h1>
     <p class="text-white text-md max-md:text-sm break-words ">{{ $user->description }}</p>
   </div>
