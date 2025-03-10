@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
+{{-- TODO: RESPONSIVE VISTAS GRUPOS Y PERFILES, PAGINA PRINCIPAL Y LOGINS, LOGO Y NOMBRE DE PÁGINAS --}}
 
 @section('content')
 <button  class="rounded-md p-2 flex items-center  gap-5 cursor-pointer bg-[#05324f] text-[#b3e534] translate-x-1 transition-all duration-300 relative top-4 left-3">
