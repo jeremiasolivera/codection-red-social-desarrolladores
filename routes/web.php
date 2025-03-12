@@ -51,8 +51,10 @@ Route::middleware('auth')->group(function () {
         })->with('user') 
         ->latest()
         ->get();
+        $categorias = Categoria::all();
         
-        return view('pages.perfiles.profile', compact('posts','reposts'));
+        
+        return view('pages.perfiles.profile', compact('posts','reposts','categorias'));
     })->name('profile.change');
     Route::post('/profile', function(Request $request){
         
@@ -91,6 +93,7 @@ Route::middleware('auth')->group(function(){
     // Rutas de las publicaciones
     Route::post('/post/store', [PostController::class, 'store'])->name('post.store');
     Route::put('/post/edit/{post}', [PostController::class, 'update'])->name('post.update');
+    Route::get('/post/edit/{post}', [PostController::class, 'edit'])->name('post.edit');
     Route::delete('/post/{post}', [PostController::class, 'destroy'])->name('post.destroy');
     Route::post('/posts/{post}/reaccion', [PostController::class, 'reaccion'])->name('posts.reaccion');
     Route::post('/posts/{id}/repost', [PostController::class, 'repost'])->middleware('auth'); 

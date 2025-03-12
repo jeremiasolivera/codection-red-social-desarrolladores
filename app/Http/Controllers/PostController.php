@@ -145,7 +145,7 @@ class PostController extends Controller
 
         $post->save();
 
-        return redirect()->back()->with('success', 'Post actualizado correctamente.');
+        return redirect()->route('profile.change')->with('success', 'Post actualizado correctamente.');
 
     }
 
