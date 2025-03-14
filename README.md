@@ -4,16 +4,11 @@
   <img src="https://i.ibb.co/cKTCNFpT/logo-2-codection.jpg" width="200">
 </p>
 
-Codection surge como una iniciativa inspirada en DailyDev, una popular red social para
-
-desarrolladores de habla inglesa.
+Codection surge como una iniciativa inspirada en DailyDev, una popular red social para desarrolladores de habla inglesa.
 
   
 
-Codection tiene como objetivo proporcionar un espacio donde los usuarios puedan compartir sus experiencias cotidianas en el ámbito tecnológico, colaborar con otros profesionales y mantenerse actualizados
-
-con las últimas novedades del sector.
-
+Codection tiene como objetivo proporcionar un espacio donde los usuarios puedan compartir sus experiencias cotidianas en el ámbito tecnológico, colaborar con otros profesionales y mantenerse actualizados con las últimas novedades del sector.
   
 
 ## 🚀 Uso
