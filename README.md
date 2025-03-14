@@ -1,17 +1,62 @@
-# Codection - La red social para desarrolladores
+# CODECTION - Red Social Para Desarrolladores
+ <img src="https://i.ibb.co/cKTCNFpT/logo-2-codection.jpg" />
+ 
+ Codection surge como una iniciativa inspirada en DailyDev, una popular red social para
+ desarrolladores de habla inglesa.
 
-### Comandos Útiles:
-- php artisan serve --host codection-project-posts.com
-- npm run dev
-- php artisan lang:publish
+ Codection tiene como objetivo proporcionar un espacio donde los usuarios puedan compartir sus experiencias cotidianas en el ámbito tecnológico, colaborar con otros profesionales y mantenerse actualizados
+ con las últimas novedades del sector.
 
+## 🚀 Uso
+ Codection está diseñado para personas hispanohablantes interesadas en la tecnología.
+ Los usuarios podrán iniciar sesión con un solo clic, realizar publicaciones, interactuar con
+ ellas y crear grupos de interés para intercambiar ideas con otros profesionales.
 
-## ¿Cómo logré crear el módulo de Seguidores y Seguidos?
+## ✨ Tecnologías utilizadas
+- **Backend**: Laravel
+- **Frontend**: Blade + Tailwind CSS
+- **Base de datos**: MySQL
+- **Autenticación**: Laravel Breeze y Socialite
 
-1. Creamos el controlador: *php artisan make:migration* create_followers_table
-2. Generamos el usuario seguidor 'user_id' y el usuario que sigue 'follower_id'
-3. Corremos el comando para migrar la tabla: *php artisan migrate*
-4. Definir la relación UnoaMuchos en la clase del usuario
-5. Creamos un controlador: php artisan make:controller FollowController
+## ⚙️ Instalación
+1. Clonar el repositorio:
+   ```bash
+   git clone https://github.com/jeremiasolivera/codection-red-social-desarrolladores
+   cd codection
+   ```
+2. Instalar dependencias:
+   ```bash
+   composer install
+   npm install
+   ```
+3. Copiar el archivo de entorno:
+   ```bash
+   cp .env.example .env
+   ```
+4. Configurar la base de datos en `.env` y ejecutar:
+   ```bash
+   php artisan migrate --seed
+   ```
+5. Generar la clave de aplicación:
+   ```bash
+   php artisan key:generate
+   ```
+6. Iniciar el servidor:
+   ```bash
+   php artisan serve
+   ```
+7. Compilar assets:
+   ```bash
+   npm run dev
+   ```
+## 🌟 Entregables
+- **Inicio de sesión con Google y GitHub**: SingleSign-On con Google y GitHub.
+- **Plataforma de Publicaciones y Conexiones entre Usuarios**: Sistema de likes y reposts.
+- **Grupos de Interés**:Los usuarios podrán crear grupos enfocados en un tema principal.
 
-<!-- TODO: hacer la pagína 404 not found -->
+## ⚖️ Licencia
+Este proyecto es de código abierto y fue creado para poner en práctica mis habilidades.
+
+---
+👏 **Desarrollado con pasión por Jeremías Olivera. Téc. Analista de Sistemas.**
+
