@@ -1,6 +1,8 @@
 # CODECTION - Red Social Para Desarrolladores
 
-![Descripción de la imagen](https://i.ibb.co/cKTCNFpT/logo-2-codection.jpg)
+<p align="center">
+  <img src="https://i.ibb.co/cKTCNFpT/logo-2-codection.jpg" width="200">
+</p>
 
 Codection surge como una iniciativa inspirada en DailyDev, una popular red social para
 
